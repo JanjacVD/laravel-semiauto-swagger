@@ -1,11 +1,12 @@
+## Credits
+
+This code is taken from [laravel-g4t-swagger-auto-generate](https://github.com/hussein4alaa/laravel-g4t-swagger-auto-generate) by [hussein4alaa](https://github.com/hussein4alaa), he started the whole thing, I mixed up some non optimized code to generate response schemas based on Resources
+
 # Swagger Laravel Autogenerate Package
 
 The Swagger Laravel Autogenerate Package is a convenient tool that automatically generates Swagger documentation for your Laravel APIs based on your route definitions. It eliminates the need for manually documenting your API endpoints, saving you time and effort.
 
-
-
 ![Swagger Laravel Autogenerate Package](https://www.scottbrady91.com/img/logos/swagger-banner.png)
-
 
 ## Features
 
@@ -15,22 +16,22 @@ The Swagger Laravel Autogenerate Package is a convenient tool that automatically
 - Generates JSON output conforming to the Swagger/OpenAPI specification.
 - Easy integration and configuration within Laravel projects.
 
-
 ## Installation
 
 Install the Swagger Laravel Autogenerate Package via Composer:
 
 ```
-composer require g4t/swagger
+janjacvd/laravel-semiauto-swagger
 ```
 
 ## Usage
 
 #### Click here to watch a video on how to use this package
+
 [![Explanatory video on how to use](https://img.youtube.com/vi/bI1BY9tAwOw/0.jpg)](https://www.youtube.com/watch?v=bI1BY9tAwOw)
 
-
 1. After installing the package, publish the configuration file:
+
 ```
 php artisan vendor:publish --provider "G4T\Swagger\SwaggerServiceProvider"
 ```
@@ -52,14 +53,15 @@ php artisan vendor:publish --provider "G4T\Swagger\SwaggerServiceProvider"
     Route::get('user', [UserController::class, 'index'])->summary('get users.');
    ```
 7. To add a Section Description you can use this attribute `#[SwaggerSection('everything about your users')]` in your controller.
-      Here's how you can use this attribute in your controller:
+   Here's how you can use this attribute in your controller:
+
    ```php
     <?php
-    
+
     namespace App\Http\Controllers;
-    
+
     use G4T\Swagger\Attributes\SwaggerSection;
-    
+
     #[SwaggerSection('everything about your users')]
     class UserController extends Controller
     {
@@ -68,28 +70,64 @@ php artisan vendor:publish --provider "G4T\Swagger\SwaggerServiceProvider"
        // ...
     }
    ```
-      
 
- 
+## Usage for Responses
+
+In controller, put a doc comment with @resource {absolute path to resource}
+
+```php
+ <?php
+ namespace App\Http\Controllers;
+
+
+ class UserController extends Controller
+ {
+      /**
+       * @resource \App\Http\Resources\UserResource
+      */
+      public function login(LoginRequest $request)
+      {
+         //Auth logic return the user resource
+      }
+ }
+
+ // UserResource
+
+ namespace App\Http\Resources;
+
+class UserResource extends JsonResource
+{
+ /**
+  * @resourceModel
+  * @attributes {
+  *   "id": "number",
+  *   "name": "string[]?",
+  *   "address": "\App\Http\Resources\AddressResource[]"  <-----Nested resource, array of AddressResource, With absolute path
+  * }
+  */
+ public function toArray(Request $request): array
+ {
+   //Method implementation
+ }}
+
+
+class AddressResource extends JsonResource
+{
+ /**
+  * @resourceModel
+  * @attributes {
+  *   "place_id": "string",
+  *   "formatted_address": "string?",
+  * }
+  */
+ public function toArray(Request $request): array
+ {}}
+```
 
 ## Contributing
 
 Contributions to the Swagger Laravel Autogenerate Package are always welcome! If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
-
 ## License
 
 The Swagger Laravel Autogenerate Package is open-source software licensed under the [MIT license](LICENSE.md).
-
-## Credits
-
-The Swagger Laravel Autogenerate Package is developed and maintained by [HusseinAlaa](https://www.linkedin.com/in/hussein4alaa/).
-
-## Additional Resources
-
-- [Swagger Documentation](https://swagger.io/docs/)
-- [Laravel Documentation](https://laravel.com/docs)
-- [GitHub](https://github.com/hussein4alaa/laravel-g4t-swagger-auto-generate)
-
-
-![stand with palestine](https://i.ebayimg.com/images/g/aYYAAOSwXnNhplzM/s-l1200.jpg)
