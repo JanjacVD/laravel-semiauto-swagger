@@ -21,7 +21,7 @@ The Swagger Laravel Autogenerate Package is a convenient tool that automatically
 Install the Swagger Laravel Autogenerate Package via Composer:
 
 ```
-composer require g4t/swagger
+janjacvd/laravel-semiauto-swagger
 ```
 
 ## Usage
@@ -131,13 +131,3 @@ Contributions to the Swagger Laravel Autogenerate Package are always welcome! If
 ## License
 
 The Swagger Laravel Autogenerate Package is open-source software licensed under the [MIT license](LICENSE.md).
-
-## Credits
-
-The Swagger Laravel Autogenerate Package is developed and maintained by [HusseinAlaa](https://www.linkedin.com/in/hussein4alaa/).
-
-## Additional Resources
-
-- [Swagger Documentation](https://swagger.io/docs/)
-- [Laravel Documentation](https://laravel.com/docs)
-- [GitHub](https://github.com/hussein4alaa/laravel-g4t-swagger-auto-generate)

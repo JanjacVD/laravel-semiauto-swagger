@@ -1,25 +1,29 @@
 {
-    "name": "g4t/swagger",
-    "description": "g4t laravel swagger",
-    "autoload": {
-        "psr-4": {
-            "G4T\\Swagger\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Hussein Alaa",
-            "email": "hussein4alaa@gmail.com"
-        }
-    ],
-    "license": "MIT",
-    "minimum-stability": "stable",
-    "require": {},
-    "extra": {
-        "laravel": {
-            "providers": [
-                "G4T\\Swagger\\SwaggerServiceProvider"
-            ]
-        }
+  "name": "janjacvd/laravel-semiauto-swagger",
+  "description": "Semi auto swagger",
+  "autoload": {
+    "psr-4": {
+      "G4T\\Swagger\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Valentino Janjac",
+      "email": "valentino.janjac@gmail.com"
+    },
+    {
+      "name": "Hussein Alaa",
+      "email": "hussein4alaa@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "G4T\\Swagger\\SwaggerServiceProvider"
+      ]
+    }
+  }
 }
