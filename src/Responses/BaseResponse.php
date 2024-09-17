@@ -125,7 +125,7 @@ abstract class BaseResponse
                     // $subSchema = self::generateSchemaFromResourceDocumentation($className);
                     // dd($subSchema);
                     // $mockData = self::generateMockDataFromResourceDocumentation($className);
-                    $line = str_replace(substr($line, strpos($line, ':') + 1), json_encode($mockData), $line);
+                    $line = str_replace(substr($line, strpos($line, ':') + 1), json_encode($mockData), $line) . ',';
                     break;
                 }
             }
@@ -136,7 +136,7 @@ abstract class BaseResponse
     }
 
 
-    protected static function replaceLinesWithBackslashSchema(string $text, &$classname, &$schemas)
+    protected static function replaceLinesWithBackslashSchema(string $text, &$schemas)
     {
         // Find lines with backslashes
         $linesWithBackslash = self::findLinesWithBackslash($text);
@@ -147,15 +147,12 @@ abstract class BaseResponse
         foreach ($lines as &$line) {
             foreach ($linesWithBackslash as $lineWithBackslash) {
                 if (trim($line) === trim($lineWithBackslash)) {
-                    // Replace the entire line with "string"
-                    // $extension = '';
                     $extension = "";
                     $className = self::extractResourcePathAndExtension($line, $extension);
-                    $subSchema = self::generateSchemaFromResourceDocumentation($className, $schema);
+                    $subSchema = self::generateSchemaFromResourceDocumentation($className, $schemas);
                     $reflection = new ReflectionClass($className);
                     $schemaName = $reflection->getShortName();
-                    $schemas[$schemaName] = $subSchema;
-                    $schemas[$schemaName]["xml"] = Str::lower($schemaName);
+
                     $isArray = strpos($extension, "[]") !== false;
                     $isOptional = strpos($extension, "?") !== false;
                     $schemaPath = "#/components/schemas/{$schemaName}";
@@ -171,7 +168,9 @@ abstract class BaseResponse
                     if ($isOptional) {
                         $schemaToMatch['nullable'] = true;
                     }
-                    $line = str_replace(substr($line, strpos($line, ':') + 1), json_encode($schemaToMatch), $line);
+                    $line = str_replace(substr($line, strpos($line, ':') + 1), json_encode($schemaToMatch), $line) . ',';
+                    $subSchema['xml'] = Str::lower($schemaName);
+                    $schemas[$schemaName] = $subSchema;
                     break;
                 }
             }
@@ -291,14 +290,10 @@ abstract class BaseResponse
 
         if (preg_match('/@attributes\s*\{(.+?)\}/s', $docComment, $matches)) {
             $attributes = $matches[1];
+            $attributes = self::replaceLinesWithBackslashSchema($attributes, $schemas);
             $attributes = preg_replace('/\*\s*/', '', $attributes);
             $attributes = trim($attributes);
             $attributes = str_replace(['“', '”'], '"', $attributes);
-            // $extension = '';
-            $attributes = self::replaceLinesWithBackslashSchema($attributes, $extension, $schemas);
-            // if ($extension !== "") {
-            //     dd($extension);
-            // }
             $attributes = preg_replace('/(\w+):\s*"(\w+)\[\]?\??"/', '"$1": {"type": "array", "items": {"type": "$2"}}', $attributes);
             $attributes = preg_replace('/(\w+):\s*"(\w+)\??"/', '"$1": {"type": "$2"}', $attributes);
             $attributes = rtrim($attributes, ',');
@@ -315,7 +310,6 @@ abstract class BaseResponse
 
             $schema['required'] = array_keys($schema['properties']);
         }
-
         return $schema;
     }
 
